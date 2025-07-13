@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 interface Message {
   id: string;
@@ -15,10 +16,11 @@ interface ChatbotProps {
 }
 
 const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
+  const location = useLocation();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hello! I\'m your AI assistant. How can I help you today?',
+      text: 'Hello! I\'m BriLow, your AI assistant. How can I help you today?',
       sender: 'bot',
       timestamp: new Date()
     }
@@ -41,6 +43,21 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
       inputRef.current.focus();
     }
   }, [isOpen]);
+
+  const getPageContext = () => {
+    const path = location.pathname;
+    const contextMap: { [key: string]: string } = {
+      '/dashboard': 'dashboard overview and analytics',
+      '/write': 'journal writing and entry creation',
+      '/entries': 'journal entries and past writings',
+      '/goals': 'goal setting and tracking',
+      '/expenses': 'expense tracking and budgeting',
+      '/academic': 'academic records and GPA tracking',
+      '/settings': 'app settings and preferences',
+      '/help': 'help and support'
+    };
+    return contextMap[path] || 'general app usage';
+  };
 
   const sendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -90,6 +107,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
       return 'Please configure your Gemini API key in the .env file to use the chatbot.';
     }
 
+    const pageContext = getPageContext();
+    
     try {
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`, {
         method: 'POST',
@@ -99,7 +118,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `You are a helpful AI assistant for a productivity dashboard app called Equilibria. The user is asking: ${message}. Please provide a helpful, concise response.`
+              text: `You are BriLow, a helpful AI assistant for a productivity dashboard app called Equilibria. The user is currently on the ${pageContext} page. The user is asking: ${message}. Please provide a helpful, concise response that's relevant to their current context. If they're asking about features, focus on the current page they're on. Always introduce yourself as BriLow when appropriate.`
             }]
           }]
         })
@@ -146,8 +165,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
                 <Bot size={20} className="text-primary-500" />
               </div>
               <div>
-                <h3 className="font-semibold text-surface-900 dark:text-surface-100">AI Assistant</h3>
-                <p className="text-xs text-surface-500">Powered by Gemini</p>
+                <h3 className="font-semibold text-surface-900 dark:text-surface-100">BriLow</h3>
+                <p className="text-xs text-surface-500">Your AI Assistant • {getPageContext()}</p>
               </div>
             </div>
             <button

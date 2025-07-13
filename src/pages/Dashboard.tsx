@@ -5,10 +5,9 @@ import MetricsPanel from '../components/dashboard/MetricsPanel';
 import AnalyticsPanel from '../components/dashboard/AnalyticsPanel';
 import ActivityPanel from '../components/dashboard/ActivityPanel';
 import ProjectsPanel from '../components/dashboard/ProjectsPanel';
-import Chatbot from '../components/Chatbot';
-import ChatButton from '../components/ChatButton';
-import { Clock, Trophy, Target, TrendingUp, PenTool, DollarSign, GraduationCap, BookOpen } from 'lucide-react';
+import { Clock, Trophy, Target, TrendingUp, PenTool, DollarSign, GraduationCap, BookOpen, Bot } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useChatbot } from '../context/ChatbotContext';
 import { dashboardAPI } from '../lib/api';
 
 interface DashboardData {
@@ -40,9 +39,9 @@ interface DashboardData {
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { resetIntro, openChatbot } = useChatbot();
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -140,6 +139,19 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="p-6 bg-gradient-to-br from-surface-50 to-surface-100 dark:from-surface-900 dark:to-surface-800 min-h-screen">
+      {/* AI Guide Banner */}
+      <div className="flex items-center gap-3 mb-6 p-4 bg-primary-600 text-white rounded-xl shadow-lg">
+        <Bot size={28} className="flex-shrink-0" />
+        <span className="text-lg font-semibold flex-1">
+          Talk to BriLow (chatbot) to navigate all these features
+        </span>
+        <button
+          onClick={openChatbot}
+          className="ml-4 px-4 py-2 bg-white text-primary-700 font-semibold rounded-lg shadow hover:bg-primary-100 transition-colors"
+        >
+          Chat Now
+        </button>
+      </div>
       <motion.div 
         className="mb-8"
         initial={{ opacity: 0, y: -20 }}
@@ -169,6 +181,15 @@ const Dashboard: React.FC = () => {
               className="btn btn-primary"
             >
               Write Today's Entry
+            </button>
+            {/* Temporary test button for BriLow intro */}
+            <button 
+              onClick={resetIntro}
+              className="px-3 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition-colors text-sm flex items-center gap-2"
+              title="Test BriLow Intro Popup"
+            >
+              <Bot size={16} />
+              Test BriLow
             </button>
           </div>
         </div>
@@ -309,10 +330,6 @@ const Dashboard: React.FC = () => {
           <ActivityPanel />
         </motion.div>
       </div>
-      
-      {/* Chatbot Components */}
-      <ChatButton onClick={() => setIsChatbotOpen(true)} />
-      <Chatbot isOpen={isChatbotOpen} onClose={() => setIsChatbotOpen(false)} />
     </div>
   );
 };

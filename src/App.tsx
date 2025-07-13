@@ -3,8 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { SidebarProvider, useSidebar } from './context/SidebarContext';
+import { ChatbotProvider } from './context/ChatbotContext';
 import Header from './components/layout/Header';
 import Sidebar from './components/layout/Sidebar';
+import GlobalChatbot from './components/GlobalChatbot';
 import Dashboard from './pages/Dashboard';
 import Write from './pages/Write';
 import Entries from './pages/Entries';
@@ -33,11 +35,14 @@ const AppContent: React.FC = () => {
 
   if (!user) {
     return (
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+        <GlobalChatbot />
+      </>
     );
   }
 
@@ -63,6 +68,8 @@ const AppContent: React.FC = () => {
           </Routes>
         </main>
       </div>
+      
+      <GlobalChatbot />
     </div>
   );
 };
@@ -73,7 +80,9 @@ function App() {
       <AuthProvider>
         <ThemeProvider>
           <SidebarProvider>
-            <AppContent />
+            <ChatbotProvider>
+              <AppContent />
+            </ChatbotProvider>
           </SidebarProvider>
         </ThemeProvider>
       </AuthProvider>
