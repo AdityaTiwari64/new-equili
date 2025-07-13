@@ -124,11 +124,17 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isSidebarOpen }) => {
             </AnimatePresence>
           </div>
           
-          <button className="p-2 rounded-lg text-surface-600 hover:text-surface-900 dark:text-surface-400 dark:hover:text-surface-100 hidden sm:block">
+          <button 
+            onClick={() => navigate('/help')}
+            className="p-2 rounded-lg text-surface-600 hover:text-surface-900 dark:text-surface-400 dark:hover:text-surface-100 hidden sm:block"
+          >
             <HelpCircle size={20} />
           </button>
           
-          <button className="p-2 rounded-lg text-surface-600 hover:text-surface-900 dark:text-surface-400 dark:hover:text-surface-100 hidden sm:block">
+          <button 
+            onClick={() => navigate('/settings')}
+            className="p-2 rounded-lg text-surface-600 hover:text-surface-900 dark:text-surface-400 dark:hover:text-surface-100 hidden sm:block"
+          >
             <Settings size={20} />
           </button>
           
@@ -167,18 +173,22 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isSidebarOpen }) => {
                       </div>
                     </div>
                   </div>
-                  
                   <div className="py-2">
-                    <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-surface-50 dark:hover:bg-surface-700/50">
+                    <button
+                      onClick={() => { setIsProfileOpen(false); navigate('/settings'); }}
+                      className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-surface-50 dark:hover:bg-surface-700/50 w-full text-left"
+                    >
                       <User size={16} />
                       <span>Profile</span>
-                    </a>
-                    <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-surface-50 dark:hover:bg-surface-700/50">
+                    </button>
+                    <button
+                      onClick={() => { setIsProfileOpen(false); navigate('/settings'); }}
+                      className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-surface-50 dark:hover:bg-surface-700/50 w-full text-left"
+                    >
                       <Settings size={16} />
                       <span>Settings</span>
-                    </a>
+                    </button>
                   </div>
-                  
                   <div className="p-2 border-t border-surface-200 dark:border-surface-700">
                     <button 
                       onClick={handleSignOut}
